@@ -71,6 +71,7 @@ async function run(): Promise<void> {
 
     core.info(`🏆 API response status: ${dispatchResp.status}`)
     core.setOutput('workflowId', foundWorkflow.id)
+    core.setOutput('dispatchResponse', dispatchResp)
   } catch (error) {
     const e = error as Error
 
