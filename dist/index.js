@@ -607,7 +607,7 @@ function run() {
             core.info(`workflowId ${foundWorkflow.id}`);
             core.info(`dispatchResponse ${dispatchResp}`);
             core.setOutput('workflowId', foundWorkflow.id);
-            core.setOutput('dispatchResponse', dispatchResp);
+            core.setOutput('runId', dispatchResp.data.workflow_run.id);
         }
         catch (error) {
             const e = error;

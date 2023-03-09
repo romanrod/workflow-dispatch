@@ -74,7 +74,7 @@ async function run(): Promise<void> {
     core.info(`dispatchResponse ${dispatchResp}`)
     
     core.setOutput('workflowId', foundWorkflow.id)
-    core.setOutput('dispatchResponse', dispatchResp)
+    core.setOutput('runId', dispatchResp.data.workflow_run.id)
   } catch (error) {
     const e = error as Error
 
