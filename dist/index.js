@@ -603,11 +603,17 @@ function run() {
                 ref: ref,
                 inputs: inputs
             });
+            // Get the URL of the workflow run that was triggered
+            const workflowUrl = dispatchResp.data.workflow_url;
+            // Get the details of the workflow run using the workflow URL
+            const workflowRunResponse = yield octokit.request(`GET ${workflowUrl}`);
+            // Get the run ID of the triggered workflow
+            const runId = workflowRunResponse.data.id;
             core.info(`🏆 API response status: ${dispatchResp.status}`);
             core.info(`workflowId ${foundWorkflow.id}`);
-            core.info(`dispatchResponse ${dispatchResp}`);
+            core.info(`runId ${runId}`);
             core.setOutput('workflowId', foundWorkflow.id);
-            core.setOutput('runId', dispatchResp.data.workflow_run.id);
+            core.setOutput('runId', runId);
         }
         catch (error) {
             const e = error;
