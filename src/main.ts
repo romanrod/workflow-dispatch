@@ -69,21 +69,26 @@ async function run(): Promise<void> {
       inputs: inputs
     })
 
-    // Get the URL of the workflow run that was triggered
-    const workflowUrl = dispatchResp.data.workflow_url
+    if (dispatchResp.data.status === 'queued' && dispatchResp.data.workflow_url) {
+      // Get the URL of the workflow run that was triggered
+      const workflowUrl = dispatchResp.data.workflow_url;
+    
+      // Get the details of the workflow run using the workflow URL
+      const workflowRunResponse = await octokit.request(`GET ${workflowUrl}`);
+    
+      // Get the run ID of the triggered workflow
+      const runId = workflowRunResponse.data.id;
+      console.log(`Workflow run ID: ${runId}`);
+      core.setOutput('runId', runId)
+    } else {
+      console.log(`Workflow dispatch event was not successful. Status: ${dispatchResp.data.status}`);
+    }
 
-    // Get the details of the workflow run using the workflow URL
-    const workflowRunResponse = await octokit.request(`GET ${workflowUrl}`);
-
-    // Get the run ID of the triggered workflow
-    const runId = workflowRunResponse.data.id;
 
     core.info(`🏆 API response status: ${dispatchResp.status}`)
-    core.info(`workflowId ${foundWorkflow.id}`)
-    core.info(`runId ${runId}`)
     
     core.setOutput('workflowId', foundWorkflow.id)
-    core.setOutput('runId', runId)
+    
   } catch (error) {
     const e = error as Error
 
